@@ -1,0 +1,152 @@
+INDEX FILE: 
+our render method takes two arguments 
+
+ReactDOM.render(
+  <App />, // the created App function 
+  document.querySelector('#root') // from the index.html
+
+);
+
+A component is a Function or Calss that produces HTML to show the user and handles feedback from the user. 
+JSX and Event Handlers.
+
+When do we use Class or Functional Components 
+
+Functional : Good for simple 
+Class: Good for just about everything else. 
+
+Class Based Components Benefits: 
+1. Easier code orgainzation. 
+2. Can use 'state' react syster.
+3. Understands lifecycle events. 
+
+App Challenges 
+Need to get the users physical location 
+Need to determine the current month 
+Need to change text and styling based on location + month 
+
+
+App Archetecture 
+App Component  ======> SeasonDisplay
+
+
+We would Be using the GeoLocation API to get the users current location.
+
+GeoLocation
+1. We have a default GeoLocation method 
+
+window.navigator.geolocation.getCurrentPosition(
+    (position) => console.log(position),
+    (err) =>console.log(err)
+  );
+
+2. The position object contains the coordinates (longitude and latitude)
+
+3. With functional component we don't have the solution to wait for our location.
+
+Rules of Class Components 
+1. Must be a javascript class 
+2. Must extend (subclass) React.Component
+3. Must define a 'render' method that returns some amount of JSX 
+
+Rules of State 
+1. Only usable with class components 
+2. You will confuse props with state 
+3. 'State' is a JS object that contains data relevant to a component 
+4. Updating 'state; on a component causes the component to (almmost) instantly rerender
+5. State must be initialized when a component is created. We can initialize with constructor or without a constructor.
+6. State can only be updated using the function 'setState'. State update is an addictive method.
+
+Constructor Function: 
+The first function to be called before anything else in a state.
+
+
+class App extends React.Component { 
+  constructor(props) { 
+    super(props);
+
+constructor(props) 
+We would always need to call super(props) as a refrence to our parent constructor still get calls. 
+Its advisable to avoid placing functions inside the render since render would be called on multiple occasions. 
+
+
+Flow Diagram: 
+JS file loaded by browser 
+Instance of App component is created 
+App components 'constructor' function gets called 
+State object is created and assigned to the 'this.state' property 
+We call geolocation service 
+React calls the components render method
+ App returns JSX, gets rendered to page as HTML 
+ 
+ We get result of geolocation. 
+
+ Please remember the function is a call back function and would not set till the call back is recieved. 
+
+We don't need to update the entire properties in a state. 
+
+
+LifeCycle Methods 
+Component LifeCycle Method 
+Constructor 
+render - content visible on screen 
+ComponentDidMount - sit and waits for updates, called only once when the component renders on the screen. 
+componentDidUpdate - sit and wiat untill the component is no longer shown. When the component would be called per setState and rerendering 
+comonentWillUnmount  just for cleaning 
+
+
+the render method is always called before the componentDidUpdate is called. 
+
+Why do we use ComponentDidMount componentDidUpdate componentWillUnmount 
+
+render method: Return JSX only.
+ComponentDidMount: A perfect location for initial data loading or processes you need to invoke just once. It is recommended to keep all processes in Did munt 
+
+ComponentdidUPdate: Gets called at each update, good location to do more data loading when state/props change. 
+
+ComponentWillUNmount: Remove a component from the screen and do some cleaning.
+
+Other lifecycle methods are very infrequently used. 
+
+
+6.3 Refactoring Data 
+We place the get position into the ComponentDidMount since it's the best position from explanations. 
+
+class App extends React.Component { 
+  constructor(props) { 
+    super(props);
+
+    this.state = { lat : null }
+  }
+}
+ 
+
+ is equivalent to 
+
+ state = { lat: null }
+
+Babel helps us to  handle the constructor and super props making the code shorter and faster 
+
+
+Importing CSS 
+We don't need to export default in CSS but we would import. 
+
+
+We do not need to have multiple return statements in the render statements. 
+
+We can always create a helper method
+renderMethod() { 
+
+}
+
+render() {
+  {renderMethod}
+}
+
+
+
+NOTE: 
+
+To import props from index.js to season display we need to prop in the tag element 
+<SeasonDisplay lat = {this.state.lat} > 
+After which it can be accessed in the SeasonDisplay.js file. 
