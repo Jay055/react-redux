@@ -1,7 +1,9 @@
 import React from 'react'; 
-
+import { connnet, connect } from 'react-redux';
+import { createStream } from '../../actions';
 // import helpers from reduce forms 
 import { Field, reduxForm } from 'redux-form';
+import { createPost } from '../../actions';
 
 
 class StreamCreate extends React.Component { 
@@ -18,9 +20,10 @@ class StreamCreate extends React.Component {
 
   // destructed from formProps , meta props handles error
   renderInput=({ input, label, meta }) => { 
+    const className =`field ${meta.error && meta.touched ? 'error': ''}`
     // console.log(meta);
     return (
-    <div className="field">
+    <div className={className}>
       <label>{label}</label>
       <input {...input} autoComplete="off" />
       {this.renderError(meta)}
@@ -28,8 +31,9 @@ class StreamCreate extends React.Component {
     )}
   
 
-    onSubmit(formValues){ 
-      console.log(formValues);
+    onSubmit= (formValues)=> { 
+      this.props.createStream(formValues)
+      // console.log(formValues);
     }
   render() {
     // console.log(this.props);
@@ -66,7 +70,9 @@ const validate = (formValues) => {
 }
 
 
-export default reduxForm({ 
+const formWrapper =  reduxForm({ 
   form: 'nameStreamCreate',
   validate
 }) (StreamCreate);
+
+export default connect(null, { createStream })(formWrapper);

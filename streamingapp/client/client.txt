@@ -1,0 +1,392 @@
+//<-------------------------
+OPEN Broadcaster Software (OBS) 		------------------
+We would be creating a streaming app like twitch tv 
+App Challenges 
+1.  Need to be able to navigate around to separate pages in our app 
+2. Need to allow a user to login/logout 
+3. Need to handle forms in Redux 
+4. Need to master CRUD (Create Read Update Destroy) operations in React/Redux 
+5. Errors will likely occur! Need good error handling. 
+
+Initial SET UP 
+1. We create create-react-app clients 
+Confirm why we use Functional and Class components. 
+//<-------------- INTRODUCTION TO REACT ROUTER FOR NAVIGATION ---->
+1. We install --save react-router-dom 
+ 		The react-router is the core library which we don't install ;
+2. import { BrowserRouter, Route } from 'react-router-dom'; 		App component 
+3  exact React router works 
+The exact param disables the partial matching for a route and makes sure that it only returns the route if the path is an EXACT match to the current URL.
+
+4 How React Router Works < 
+5. How Paths get matched 
+6. We do not want to navigate with <a href links > because it reloads the page each time dumping our previous API calls and previous data on the page. 
+
+Navigating with React 
+
+BrowersRouter
+HasH router / == #
+Memory Router - URL doesn't update 
+The difference is about Deploying: 
+Traditional server if the /pagetwo is not defined it responds with a 404; 
+For the react development server if you send any route that's not defined it returns the index.html file and the HTML file then deploys the Routes linked to it. 
+
+Hash Router 
+The major difference in the hash router is that the page loads what's before the hash only and only after that would it consider going to the hash; i.e localhost2000/#/page2 --- it always only loads localhost2000 and only after that would it check for instructions  to go to the page 2
+
+//<------ Component Scaffolding -----------> 
+We would create different components and route path to match 
+ import StreamCreate from './streams/StreamCreate';
+import StreamEdit from './streams/StreamEdit';
+import StreamList from './streams/StreamList';
+import StreamShow from './streams/StreamShow';
+import StreamDelete from './streams/StreamDelete';
+
+<BrowserRouter>
+      <div>
+        <Route path="/" exact component={StreamList} />
+        <Route path="/streams/new" exact component={StreamCreate} />
+        <Route path="/streams/edit" exact component={StreamEdit} />
+        <Route path="/streams/delete" exact component={StreamDelete} />
+        <Route path="/streams/show" exact component={StreamShow} />   
+      </div>
+    </BrowserRouter>
+
+What every constant we want on our page avoid placing inside the route tag. 
+
+<----------- 209 CONNECTING THE HEADER ----------------> 
+1. We create the header component with links.   Import links.
+2.  An error message pops up  "Error: Invariant failed: You should not use <Link> outside a <Router>"
+We earlier to keep a component permanent irrespective of the route we should avoid placing inside a route tag; so how do we approach this ; 
+3. The expectation is if it contains any react-router element like a link. We need to migrate our header component inside there BrowerRouter tag (!<RoutePath>), hence it still remains visible.
+
+//<------------------------ OAuth-Based Authentication -----------------------------------------------------> 
+Scope: Permission granted to an application. 
+Google OAuth scope list: Scopes you can ask for to get access to different versions of a uses info. 
+We can use google OAuth for user identification: google -- google OAuth scope list. 
+
+Steps for Setting up OAuth
+Create a new project at console.developers.google.com/ 
+Set up an OAuth confirmation screen (External) 
+Generate an OAuth Client ID 
+Install Google's API library, initialize it with the OAuth Client ID 
+Make sure the lib gets called any time the user clicks on the 'Login with Google' button. 
+
+//< ---------- WIRING UP THE GOOGLE API LIBRARY ---------------------------> 
+1. Include google script tag in our index.html file 	<script src ="https://apis.google.com/js/api.js"></script>
+2. Create a GoogeAuth.js file with  class-based component
+3. Insert Google Auth in our header.js file 
+4. Google Auth is really lightweight to help to load in multiple sites therefore we would have to load the functions we need before use.  We set up what we need to load from gapi
+class GoogleAuth extends React.Component { 
+  componentDidMount() {
+    window.gapi.load('client:auth2', () => { 
+	window.gapi.client.init({
+        clientId: '1012200546902-d0gonh33n4fgfo3kmi3nhoglopmogmt2.apps.googleusercontent.com',
+        scope: 'email'});});  }
+// Scope : we nw
+//<---------------- 215 Sending a User into the OAuth Flow ---------------------> 
+const auth = gapi.auth2.getAuthInstance()
+We only reference methods with clearly defined name 
+To sign in auth.signIn()
+To check if we are signed in   ; auth.isSignedIn.get()
+
+//<----------- 216 Rendering Authentification Status ----------------->
+Auth Component  ( To do in the GoogleAuth.js component)
+a. Get a reference to the 'auth' object after it is initialized 
+b. Figure out if the user is currently signed in 
+c. Print their authentication status on the screen
+ We can achieve this by following the following steps: 
+1. We would need a call back function after initialization of the clientID. This time around we use the .then method since it's 
+informing us init has been completed.
+2. 	Attach a .then method after the client ID has been initialized 
+.then(() => {
+     // reference to the auth object for auth status
+        this.auth = window.gapi.auth2.getAuthInstance();
+        this.setState({ isSignedIn: this.auth.isSignedIn.get() })		});}); }
+
+
+3. We would set a state state = { isSignedIn: null }; // we don't know on loading 
+4. We can then use a conditional statement to check if we are signed in,  this can be done in a helper method then rendered to the DOM. 
+// gapi.auth2.getAuthInstance().signOut();
+
+//< -------Updating Auth State --------------> 
+1. We can add a listener from our _proto_ object to listen to changes 
+	 this.auth.isSignedIn.listen(this.onAuthChange
+2.  Create our onAuthChange function 
+	  onAuthChange = () => {     this.setState ({ isSignedIn: this.auth.isSignedIn.get()});};
+3. Add some sign in and sign out functions 
+
+// 219 On Demand Sign in and Sign Out
+1.  onSignIn =() => {   this.auth.signIn();}; and lick to our buttons. Remember we cannot call the function with the parenthesis , 
+if we do it would automatically be called. 
+
+We would like to get the current state in our google Auth into our redux store so all components can get easy access to it therefore we would have to install react-redux.
+	class GoogleAuth extends React.Component { state = { isSignedIn: null }; // we don't know on loading 
+
+//<--------------------Redux Architecture Design ------------> 
+1. Install our react redux-react
+ 2. Create our typical Redux-react folders ; Reducers and Actions 
+	Create our combine reducers ,  stores in index.js etc 
+
+// Connecting Auth with Creators 
+1.Create our action creators with SignIN and Sign out and import to googleAuth, import connect and actions. 
+2.  pass our usual suspects for Redux :D.
+3. 	Change our Auth change to be 
+onAuthChange = (isSignedIn) => {     if(isSignedIn) {
+      this.props.signIn();
+    } else {
+      this.props.signOut();}};
+
+// Handling Auth Status Through Redx 
+1.  Still on the matter of passing our entire state to redux store  we would create
+	const mapStateToProps = (state) => { 
+  return { isSignedIn: state.auth.isSignedIn};};
+2. We would have to delete the State value since we wouldn't be getting our data from it anymore but rather from a redux store. 
+  delete  state = { isSignedIn: null }; // we don't know on loading 
+3. We would change the setState to AuthChange 
+// this.setState({ isSignedIn: this.auth.isSignedIn.get() });
+        this.onAuthChange(this.auth.isSignedIn.get());
+4. Change our State to props in our GoogleAuth comp;
+5. Give our connect function mapStatetoProps 
+	
+//<------------- 225 FIXED ACTION TYPES -----------------------> 
+This can be done to ensure no typo errors between our reducer and action type 
+2. create types.js, the create const of our strings being used and pass down. This helps eliminates errors from typo.
+//< ----- RECORDING THE USER'S ID --------------> 
+We can get the users ID as part of what's gotten from OAuth
+3. In GoogleAuth.js  onAuthChange we have to include the ID as part of the parameters  in the this.props.signIn
+	onAuthChange = (isSignedIn) => { 
+    if(isSignedIn) {
+      this.props.signIn(this.auth.currentUser.get().getId());
+4. When we pass in the function we would also get the userId, we need the action creator as well to receive this ID as an argument. We need to assign this property as a payload property
+	export const signIn = (userId) => { return {     type: SIGN_IN,    payload:userId};};
+5.  We would have to create. a UserId in the authReducer 
+		const INITIAL_STATE = { isSignedIn: null,  userId: null};
+6. We would pass return into the state 
+case SIGN_IN:      return {...state, isSignedIn: true, userId:action.payloadl }    
+case SIGN_OUT: return {...state, isSignedIn: false, userId:null }
+
+
+//Redux Forms ; In other to Debug better we can install Redux Dev Tools
+1. We install Redux Dev Tools extension on chrome 
+2. import { createStore, applyMiddleware, compose } from 'redux'; in index.js
+3. https://github.com/zalmoxisus/redux-devtools-extension.     1.2 Advanced store setup.
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+//<---------- CONNECTING REDUX FORMS -----------------------> 
+1. npm install redux-form 
+2. in reducers file import reducer from redux form 
+3.  add form to combine reducers ---- form: reducer 
+import { reducer as formReducer } from 'redux-form'; just to change the name to avoid confusion.
+
+//<------ CREATING FORMS ---------------------> 
+1. StreamCreate.js we would create a class-based component, we want to have a bunch of helper methods to better organize our code. 
+2. import { Field, reduxForm } from 'redux-form'; where Field is a component and reduxForm is a function.
+3.  export default reduxForm({   form: 'nameStreamCreate'}) (StreamCreate);
+4. this.props becomes the form related array. 
+5. <form> <Field name="title" /> gives us an error message     "Error: Element type is invalid: expected a string (for built-in components)"
+6. We need to add in some component, it doesn't know what input to expect 
+
+//<--------------- Automatically Handling Events ----------------------------> 
+1.   renderInput(formProps) { 
+    return (
+        <input
+        onChange={formProps.input.onChange}
+        value={formProps.input.value} />
+    )
+This is the way we handle to get the input but there's a better way to get all inputs at once from the docs 
+  renderInput({input}) {     return <input {...input}  /> ; } == where we destructed input from formProps 
+UNDERSTAND REDUX FORMS BETTER 
+//<----------------------- Customizing Form Fields ----------------------------------->
+
+ <Field name="title" component={this.renderInput} />  from our form tag to get porp
+1. We can add props to the field element  label 
+2. Any time we add props to ka react form, react would  by default pass it to the renderInput()  and we can receive it as a second input in our render input helper method.
+3. <Field name="title" component={this.renderInput} label="Enter Name" />								renderInput({input, label}) { 
+//<------------------------- Handling Form Submission ------------> 
+1. Console.logging(this.props) shows us a property handleSubmit which is used to handle submit in React. We have to link this to our onSubmit function. 
+2. <form  onSubmit={this.props.handleSubmit(this.onSubmit)}
+3. onSubmit(formValues); would be called 
+
+/<------------------ VALIDATION OF FORM INPUTS -------------------------------> 
+1. Create a validate function 
+2. Add validate: validate to the export redux form object to be wired up. 
+
+//<-------------- DISPLAYING VALIDATION MESSAGES ------------------> 
+1. We would be introduced to a new parameter "meta" from our "formProps".
+2. meta handles displaying of error messages, it's a default property. 
+renderInput({input, label, meta }) { , then display our error with <div>{meta.error}</div>
+
+//<------- showing errors on touch -------------> 
+1. To remove the drop down list we can add autoComplete="off".
+2. We would like  take the entire error message in a render error helper 
+		renderError({ error, touched }) {
+   			 if(touched && error) { 
+      				return (
+        			<div className="ui error message">
+         			 <div className="header">{error}</div>
+         				 </div> );    }  }
+ then return into the file. 
+
+3. from our meta property we can also get the touched property, 
+	 {this.renderError(meta)} ==> it displays the same usual suspect error so we change to an arrow function. 
+
+
+4. our semantic UI doesn't show errors normally, we would need to include an error class into the form to display errors. 
+
+//<-----------------------------------------------------------------> 
+//<---------------- REST BASED REACT APPS ------------------------> 
+ //<------------------------ CREATE STREAMS ----------------------------> 
+JSON SERVER obeys the basic rules. 
+REST CONVENTIONS  SET DOWN RULES TO WORK WITH 
+ACTION 					METHOD 			ROUTE 
+List all records 			GEt 					/streams
+Get one 					get					/streams/id
+Create 					post					/streams/ ---- no previous id in DB 
+Update 					put					/sreams/id
+Delete 					delete	 			/streams/id
+
+//<------------- SETTING UP AN API SERVER ------------------> 
+Create a second project folder API 
+Generate a package.json file with npi init 
+install --save json server 
+Create a db.json file and initialize an array to store data
+5. change the script "start": "json-server -p 3001 -w db.json" 
+6.
+// Creating Streams through Action Creators
+1. install axios and redux-thunk 
+2. in source dir, create a folder API and file streams.js to make an instance of axios 
+	import axios from 'axios'; 
+export default axios.create({ 
+  baseURL: 'http://localhost:3001' })   // 3001  the port set by our API. 
+3. import axios into the action.js file. remember we want to set up our action (index.js / action)
+4. Create post request with axios. dispatch. We make a request to stream and put up our formValues. 
+export const createStream = formValues => async dispatch => { streams.post('/streams', formValues);};
+ // form values  == form input   // with Async we always make use of redux-thunk, we return 
+ 5. StreamCreate.js is expected to handle the post request, so we would 
+	import {connect }, import { createStream. ]
+
+//--------- 244 CREATING STREAM WITH REST CONVENTIONS 
+1. We would need to wire the connect function and redux form. 
+2. we could call connect () () 
+3. we can also create a new function formWrapped with the form syntax then export connect. 
+4. A quick reminder: For us to be able to use the new createSteam function we have to always pass it through connect so it's available in the redux store. 
+5.  We would like to create Stream on form submit. Pass the createStream function to with the (this.props.)  onSubmit.
+6. onSubmit= (formValues)=> { this.props.createStream(formValues)}
+ We get an error message saying: "Error: Actions must be plain objects. Use custom middleware for async actions. "
+7. The error above was from the fact we didn't use our middleware function.
+ We apply redux-thunk to our index.js. 
+
+//<---------- 245 Dispatching Actions After Stream Creation -------> 
+1. We get our data, now we need to know what to do with it. 
+2. We would like to create an Action type CREATE_STREAM
+3, then dispatch. our new function in action.js would look something like this. 
+`export const createStream = formValues => async dispatch => { 
+  const response = await streams.post('/streams', formValues);
+
+  dispatch({ type: CREATE_STREAM, payload: response.data });
+};
+. Please note we didn't use the dispatch in our action signIn and signOut. These actions are plain objects, not functions, so they will not need to be called with dispatch. They will instead be forwarded on directly to the reducers.
+
+// 246------- BULK ACTION CREATORS 
+1. create our action creators  following our rest API rules 
+CREATE_STREAM, FETCH_STREAMS, DELETE_STREAM,EDIT_STREAM, SIGN_IN, SIGN_OUT, FETCH_STREAM 
+// Create Bulk Reducers 
+// Object Based Reducer vs Array Based Approach 
+array approach: const streamReducer = (state=[], action) => { 
+	return state.map(stream => { 
+	if (stream.id === action.payload.id) { return action.payload;} else { return stream; 
+object approach: 	
+
+
+
+// lost files from 246 - 251// 
+Would need to reference the videos. 
+
+//We created streams reducer 
+import { FETCH_STREAM, FETCH_STREAMS, CREATE_STREAM,DELETE_STREAM, EDIT_STREAM } from '../actions/types'
+
+import _ from 'lodash';
+
+export default (state={}, action) => { 
+  switch (action.type) { 
+    case FETCH_STREAMS: 
+      return {...state, ..._.mapKeys(action.payload, 'id')};
+    case FETCH_STREAM:
+      return {...state, [action.payload.id]: action.payload };
+    case CREATE_STREAM:
+      return {...state, [action.payload.id]: action.payload };
+    case EDIT_STREAM:
+      return {...state, [action.payload.id]: action.payload };
+      // Use lodash _omit, creates a new state without action.payload
+    case DELETE_STREAM:
+      return _.omit(state, action.payload);
+      default:
+      return state; 
+  }
+}
+Pleasr reference Q & A for more clarification for fetchSTReams 
+//<---------------------- 
+
+//<----------------------- 251 MANAGING STREAMS ----------> 
+
+UPDATE OUR REDUCERS 
+import streamReducer from './streamReducer';
+
+
+export default combineReducers({
+  auth: authReducer,
+  form: formReducer,
+  streams: streamReducer
+})
+
+
+//<---------------------- 252 FETCHING A LIST OF STREAMS ----------> 
+1. We would like to fecth streams and this would be done in our streamList.js component.
+2. this.props, connect
+
+//-----------------  Rendering all Streams 
+1. Use the rendermethod to render streams with the map property
+
+//<------------------ ASSOCIATING STREAMS WITH USERS ------------------> 
+1.  in our actions we apply the getState parameter. 
+From get State we can get our userId and attach admin properties to userId, DELETE / EDIT 
+
+//<--------------------------- LINKING STREAM TO CREATION ----> 
+add is signedIN to mapStateToProps
+ isSigned: state.auth.isSignedIn
+ create a helper method renderCreate()
+
+
+ //<--------- When to Navigate Users --------------------------> 
+
+Intentional Navigation : click son link componnent 
+Programmatic Navigation: We run code to forcibly navigate the user through our app. 
+
+
+import { createBrowserHistory } from 'history'; 
+export default createBrowserHistory();
+
+Programmatic navigation would be after done after success. 
+
+
+Router and BrowserRouter
+BrowserRouter react creates the history for us. 
+Router we create ourselves and that's what we would need in this condition. 
+
+
+//<---------------------------------------------------------------> 
+
+
+//< ------------CREATING A BROWSER HISTORY -------------------> 
+Create a new file history.js 
+It's a dependency from react 
+
+
+//
+
+
+
+Change BrowserRouter to Router 
+
+
+
