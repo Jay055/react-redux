@@ -373,20 +373,70 @@ Router and BrowserRouter
 BrowserRouter react creates the history for us. 
 Router we create ourselves and that's what we would need in this condition. 
 
+// <--------------------> 
+Create our own History object and maintain ourselves history.js
 
-//<---------------------------------------------------------------> 
+We create a plain router instead of react router. BrowerRouter = Router
 
-
-//< ------------CREATING A BROWSER HISTORY -------------------> 
-Create a new file history.js 
-It's a dependency from react 
-
-
-//
+push == How we route. 
 
 
 
-Change BrowserRouter to Router 
+
+
+//<----------- MANUALLY CHANGING API RECORDS------------> 
+1. From the JSON file automatically. 
+
+//--------- Edit Stream -----------> 
+Two ways we can edit streams 
+Selection Reducer: Use a 'selectionReducer' to record what strea is being edited.
+URL-Based Selection: Available with React-router-dom. Put the ID of the stream being edited in the URL.
+
+
+URL based selector cal work if your working on a specific stream. 
+/streams/edit/85 - edit the id of 85 
+/:id == id becomes a variable. 
+
+
+//<--------------- Navigation with Edit Button---------------------> 
+ 1. change Edit buttons links with <Link to={`/streams/edit/${stream.id}`}
+ 2. Change our stream edit  path in App.js to understand stream/edit you can add a variable beside it i.e stream/edit = stream/edit/{}
+3.  
+
+//<-------- MORE ON ROUTE PARAMS ----------------> 
+
+
+WITH REACT-ROUTER EACH COMPONENT NEEDS TO BE DESIGNED TO WORK IN ISOLATION (FETCH ITS OWN DATA!)
+
+//<------------ 269 REUSING CODE ------------------------> 
+ 
+We would like to make our code reusable i.e StreamCreate and StreamEdit. 
+We create a new file StreamForm and pass all logic inside making streamCreate and StreamEdit reusable.
+
+
+//< Setting Initial Values ---------> 
+We noticed stream create and stream edit are similar the major difference being the original values already set up. 
+
+
+When we pass props from streamCreate to StreamForm we are passing to Redux form first then redux form passes to Stream form. 
+They are special values set up already by redux form for Titile and description. 
+Key to understand Edit forms. 
+NOw lets go to StreamEdit.js 
+
+From the Values of the form we can get the initial values of the editStream file. 
+
+// 272 Avoiding Changes to Properties 
+We would like to edit / send back only edited properties / properties we are trying to change. 
+
+
+// 273 Edit Form Submission 
+We update our onSubmitButton to be linked to our EditStream function. We also handle the forceful linking .
+
+After routing to the '/' home, the edit and delete buttuns dissapear. 
+
+
+
+
 
 
 
