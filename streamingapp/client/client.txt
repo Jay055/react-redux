@@ -436,6 +436,79 @@ After routing to the '/' home, the edit and delete buttuns dissapear.
 
 
 
+//<--------- 274 PUT VS PATCH REQUESTS -------------> 
+PUT REPLACES OUR EDIT 
+PATCH UPDATES JUST THE VALUES PASSED.
+
+ALWAYS USE PATCH FOR UPDATES.
+
+//<------------ USING REACT PORTALS -------------> 
+Modal window; windows that pop up and don't allow us do anything else till we complete them. 
+We would use them for Delete. 
+
+Models are challenging with React. 
+
+
+// Creating A stacking Context in Css 
+Adding position relative automatically puts our elements to a stacking context. 
+If the element occurs later it would appear on top. 
+
+
+sometimes we would work with deeply nested components making it immposible for us to make the element a modal without breaking our CSS. 
+In situations like this we would need a portal. 
+
+A portal allows us render some element not as a direct child but as a child of some other element. 
+
+///<----------- 277  CREATING A PORTAL () ----------------------------> 
+CREATE MODEL.JS 
+We would include our Model in index.html thereby avoiding nesting. 
+Include the DIV to our modal.js file
+Include the modal file to the component you need the modal to display.
+
+
+//<------------- 278 Hiding a Model ------------------> 
+
+Create an onclick event to push through history to "/"
+
+//< Making Models reusable
+Pass in props for the DeleteStream.js  to make the modal reusable. 
+
+//React Fragments 
+fragments doesn't render any html document. It;s advisable we use. 
+
+
+//Reminder on Path Params 
+// We would like to delete a specific ID , we include the :id to the route path. 
+<Route path="/streams/delete/:id"   />
+Change link to delete route 
+
+//Fetching the Deletion Stream 
+We would have to include our lifecycle methods to fetch the stream on mount. We fetch the stream with the id whenever it renders on the screen. 
+We use the componentDidMount therefore we have to change to a class based component. 
+
+
+// Update delete and cancle links. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
