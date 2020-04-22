@@ -1,11 +1,54 @@
 import React from 'react'; 
+import flv from 'flv.js';
 import { connect} from 'react-redux';
 import { fetchStream } from '../../actions';
 
 class StreamShow extends React.Component {
-  componentDidMount() { 
-    this.props.fetchStream(this.props.match.params.id);
+  // Get HTML DOM Elements
+  constructor(props) {
+    super(props); 
+
+    this.videoRef = React.createRef();
   }
+
+
+  componentDidMount() { 
+    const { id } = this.props.match.params;
+    
+    this.props.fetchStream(id);
+    this.buildPlayer();
+  }
+
+// Update buildPlayer incase it wasn't loaded on mount
+  componentDidUpdate() { 
+    this.buildPlayer();
+  }
+
+
+
+// Stop streaming when we leave component page
+  componentWillUnmount() { 
+    this.player.destroy();
+  }
+
+// Conditional to display when the videoRef hasn't been loaded on screen
+buildPlayer() { 
+  const { id } = this.props.match.params;
+ if (this.player || !this.props.stream) {
+   return; 
+ }
+ this.player = flv.createPlayer({
+  type: 'flv',
+  url: `http://localhost:8000/live/${id}.flv`
+})
+this.player.attachMediaElement(this.videoRef.current);
+this.player.load();
+
+  }
+
+
+
+
  render() {
    if(!this.props.stream) {
      return <div> Loading... </div>;
@@ -15,9 +58,11 @@ class StreamShow extends React.Component {
 
   return (
     <div>
+      <video ref={this.videoRef} style={{ width: '100%'}} controls/>
       <h1>{title}</h1>
       <h5>{description}</h5>
       StreamShow</div>
+      
   )
 }
 
