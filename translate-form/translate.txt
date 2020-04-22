@@ -1,0 +1,46 @@
+// The CONTEXT SYSTEM WITH REACT //
+
+With the context system you can pass information from the parent compoent to nested components direclty. 
+
+
+// Ways we get information in and out of a context object 
+
+
+Default Value        or     Parent Component 
+                    data 
+this.context                      Consumer
+
+
+// Creating Context Objects 
+The challenge in creating context isn't in creating but in getting information in and out. 
+
+How to set up contexts
+1. We  create a new context file  (LanguageContext.js)
+
+2. import React from 'react'; 
+
+3. // We can include a default value in the context English then connect to our nexted children
+export default React.createContext('English'); 
+
+
+// Link Contexts 
+import in the file to be linked to 
+Set up contextType in the file to be linked to eg. 
+class Button extends React.Component {
+  static contextType = LanguageContext;  //---- Special name
+
+  static: Adding property to a class directly 
+  Button.contextType === static contextType
+  Button.contextType would be done outside the class
+
+  // Change the value inside the context object 
+  We have to communicate from the App component with the Provider component (different from redux).
+  1. We would wrap the provider link with what we need to change 
+  <LanguageContext.Provider value={this.state.language}>
+        <UserCreate />
+        </LanguageContext.Provider>
+
+  Value= the state we want to change. 
+  value=(can be any sourc of data)
+
+
