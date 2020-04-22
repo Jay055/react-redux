@@ -489,7 +489,28 @@ We use the componentDidMount therefore we have to change to a class based compon
 
 // Update delete and cancle links. 
 
+//<--------------- IMPLEMENTING STREAMING ------> 
+1. View Streams: We want to load up the scream on the page. We make a class based component which would find the URL and ID of the stream and fetch the stream. 
 
+2. We  update streams route to show id in App.js 
+<Route path="/streams/:id"
+
+//<--------- 287 INtroduction to Switches -----------> 
+"/streams/:id" would display "/streams/new"  also since it assumes anything after the color would be a variable. 
+
+Switch is a way to aviod issues like this. We nest tbe route part in the switch. 
+<Switch> </Switch>
+
+//<------288 SHOWING STREAMS ------------> 
+Show stream in the StreamShow.js component. 
+
+RTMP 
+Instead of:
+
+const { NodeMediaServer } = require('node-media-server');
+we need to change the import to this:
+
+const NodeMediaServer = require('node-media-server');
 
 
 
