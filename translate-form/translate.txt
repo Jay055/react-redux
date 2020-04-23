@@ -36,11 +36,38 @@ class Button extends React.Component {
   // Change the value inside the context object 
   We have to communicate from the App component with the Provider component (different from redux).
   1. We would wrap the provider link with what we need to change 
-  <LanguageContext.Provider value={this.state.language}>
+        <LanguageContext.Provider value={this.state.language}>
         <UserCreate />
         </LanguageContext.Provider>
 
   Value= the state we want to change. 
-  value=(can be any sourc of data)
+  value=(can be any source of data)
 
 
+// Breakdown of what we achieved with the provider component 
+1. Application loads up in the browser. 
+2. We create a context object with a default value of 'english'
+3. App component gets rendered, creates a Provider that wraps UserCreate.
+4. Provider updates the value of the context object to 'this.state.langauge'
+5. Button and Field reach into context object, see the value from 'this.state.langauge'
+6. Button and Field render appropriate text to the screen. 
+
+// Each separate use of LanguageContext.Provider creates a new seperate pipe of information. 
+
+        <LanguageContext.Provider value={this.state.language}>
+        <UserCreate />
+        </LanguageContext.Provider>
+        <LanguageContext.Provider value={'english'}>
+        <UserCreate />
+        </LanguageContext.Provider>
+        <LanguageContext.Provider value={'dutch'}>
+        <UserCreate />
+        </LanguageContext.Provider>
+        <LanguageContext.Provider value={this.state.language}>
+Each one has a different value. 
+
+//< 309 Accessing Data with Consumers ----> 
+1. The second way we can access data with context is through consumers. 
+2. Consumer is a react component we can use to get info out of our context.
+
+Changing the Button to Consumer. 
