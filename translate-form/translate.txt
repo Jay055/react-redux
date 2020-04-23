@@ -70,4 +70,34 @@ Each one has a different value.
 1. The second way we can access data with context is through consumers. 
 2. Consumer is a react component we can use to get info out of our context.
 
-Changing the Button to Consumer. 
+// Changing the Button to use the  Consumer Approach 
+<LanguageContext.Consumer>
+ We always pass one child which would be a function which would be automatially called
+ {(value) => value=== 'english' ? 'Submit' : 'Vorleggen'}
+ We can include it in a renderMethod. 
+
+
+//<-------------- PULLING FROM MULTIPLE CONTEXTS -----------------> 
+ // Why do we use the Consumer Context 
+ We use the consumer whenever we need to get multiple contexts.
+ Provider would be used for single context values. 
+
+We would edit our Button.js to support multiple context values, by creating a ColorContext.js file. 
+
+
+//<---------Replacing Redux with Context --------------> 
+Redux                                   ||     Context     
+Distributes data to various components  ||    Distrubes data to various components 
+Centralizes data in a store               ||
+Provides mechanism for changing data in the store  ||
+
+
+We would look at possible ways to achieve similar with Context. 
+
+// Creating a Store Component
+IF WE WANT TO USE CONTEXT IN PLACE OF REDUX     
+1. We need to be able to get data to any component in our hierarchy. 
+2. We need to be able to seperate our view logic from business logic. 
+Business logic can be describes as states and setting states while view logic the rendering of the DOM. Most times we mix both and with Redux it's not a problem 
+since we have the Reducers and action. 
+3. We need to be able to split business logic (not have a single file with 10000 lines of code.)
