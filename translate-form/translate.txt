@@ -101,3 +101,49 @@ IF WE WANT TO USE CONTEXT IN PLACE OF REDUX
 Business logic can be describes as states and setting states while view logic the rendering of the DOM. Most times we mix both and with Redux it's not a problem 
 since we have the Reducers and action. 
 3. We need to be able to split business logic (not have a single file with 10000 lines of code.)
+
+
+
+
+// Implementing a Language Store 
+1. To seperate our view from business logic we would create seperate files for view and business logic. 
+2. We would achieve that by creating a Language Store  in LanguageContext.js which would have our business logic.
+3. In LanguageContext.js we provide  our state and callback function, which would be passed to other components by the value property. 
+
+<LanguageContext.Provider Value={language + onLanguageChange} /> 
+
+<Context.Provider  value={{ ...this.state, onLanguageChange: this.onLanguageChange }} >
+      {this.props.children}   // Nest for access to other components
+</Context.Provider>
+
+4. For other components to be able to view the logic we would need to nest then inside the Context.Provider tag which would be achieved by {this.props.children}
+
+5. Export LanguageStore and LanguageContext.
+
+
+// RENDERING THE LANGUAGE STORE 
+1. We would render the language store in App.js file. We can remove all logic from the file now and also our Context tag since it's included in the language store. 
+Import LanguageStore
+
+//Connecting the Selector to the Store 
+LanguageSelector Component we can use the this.context approach since it's only one passingdown. 
+We would change our all back from this.props === this.context 
+
+//Connecting our Field and Button Component to the Store 
+1. Now our Context has a language property and a function to get value from it we would need to use the this.context.language
+2. We can also just use destructuring. 
+ {( { language }) => this.renderSubmit(language)}
+ then change our other values to language also. 
+
+
+ // CONTEXT VS REDUX WHICH DO WE USE 
+ Redux                                                
+ Excellent Documentation 
+ Well-know design patterns 
+ Tremendous smount of open source libraries 
+
+
+ CONTEXT
+ No need for an extra lib 
+ Hard to build a 'store' component with cross cutting concerns. 
+ 
