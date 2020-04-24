@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+<<<<<<< HEAD
 import useResources from './useResources';
+=======
+>>>>>>> dca08546df51df1bca915602867dbd601b6b2aa0
 
 
 
@@ -18,6 +21,7 @@ import useResources from './useResources';
 // }
 
 // Destructure resource from props.resource (App.js props)
+<<<<<<< HEAD
 
 
 
@@ -25,6 +29,25 @@ const ResourceList = ({ resource }) => {
  const resources = useResources(resource);
   
 
+=======
+const ResourceList = ({ resource }) => {  
+  const [resources, setResources] = useState([]);
+
+    const fetchResource = async resource => {
+
+  const response = await axios.get(`http://jsonplaceholder.typicode.com/${resource}`);
+  
+
+  // this.setState({ resources: response.data });
+  setResources(response.data);
+};
+
+
+// Combination fo componentDidMount and DidUpdate
+useEffect(() => { 
+  fetchResource(resource);
+}, [resource])
+>>>>>>> dca08546df51df1bca915602867dbd601b6b2aa0
 
     return (
       <ul>
