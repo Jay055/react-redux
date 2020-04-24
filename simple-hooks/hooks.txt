@@ -1,0 +1,155 @@
+INTRODUCING HOOKS 
+Class Based Components 
+State 
+Lifecycle methods
+
+
+Function Based Components 
+Not some much. Hooks system can change the function-based components. with adding state and lifecyle methods. 
+
+
+Hooks would make it really easy to share logic within components. 
+
+
+//<--------  Hooks App -----------> 
+Functions in Hooks        Goal 
+useState              Allow a functional compoent to use component-level state 
+useEffect             Allow a functionnal component to use 'lifecycle methods'
+useContext            Allow a functoinal component ot use the context system 
+useRef                Allow a functional compoent to use the ref system 
+
+
+//Use State in Detail 
+const [resource, ]
+
+
+state = { 
+  resource: 'post',
+  count: 0 
+}
+1. for hooks we would have 
+const [resource, setResource] = useState('post);
+const [currentCount, setCount] = useState(0);
+2. we declare each time for the hooks format. 
+
+3. Comparism of Hooks with SetState 
+const [currentValue, setCurrentValue] = useState(initialValue)
+4. We know array destructuring is happening 
+currentValue = same as this.state.resource 
+setCurrentValue = this.setState({ resource: post})
+useState = function from react 
+5. initial value = same as state= {resouce:posts}
+
+6. const [resource, setResource] = useState('posts');
+button onClick={() => setResource('posts')}>Posts</button>
+<button onClick={() => setResource('todos')}>Todos</button>
+
+// 324 --- Fetching a Given Resource 
+install axios 
+
+// ComponentDidUPdate 
+We have some problems with multiple calling of ComponentDidUPdate
+
+We can add some parameter  and add prevProps as the parameters.
+
+We have some bad codes with componentdidMount and componentDidUpdate. 
+
+//<------326 REFACTORING A CLASS TO A FUNCTION --------------> 
+
+export default class ResourceList extends Component {
+state = { resources: []};
+
+async componentDidMount() { 
+  if (prevProps.resource !== this.props.resource) {
+  const response = await Axios.get(`http://jsonplaceholder.typicode.com/${this.props.resource}`);
+  };
+
+  this.setState({ resources: response.data });
+}
+
+async componentDidUpdate(prevProps) { 
+  if(prevProps.resource !== this.props.resource) { 
+    const response = await Axios.get(
+      `https://jsonplaceholder.typicode.com/${this.props.resource}`
+    );
+    this.setState({ resources: response.data})
+  }
+}
+  
+
+
+
+
+
+
+
+
+// 329 USING USE EFFECT LIKE A Lifecycle METHOD , CALL OR NOT CALLED 
+1. Use effect without an array as a second parameter 
+useEffect(() => { 
+  fetchResource();
+}, )
+== Always going to be  called 100%, Would be called anytime your component rerenders. 
+
+2. Use effect with an empty array the first and 2nd time.
+ useEffect(() => { 
+  fetchResource();
+}, [])
+
+ useEffect(() => { 
+  fetchResource();
+}, [])
+
+Would be called only one time. Same like the componentDidMount.
+
+3. With the same value in the array. 
+ useEffect(() => { 
+  fetchResource();
+}, [1])
+
+ useEffect(() => { 
+  fetchResource();
+}, [1])
+
+Would be called one since it's still the same value. 
+
+4. Different array values 
+ useEffect(() => { 
+  fetchResource();
+}, ['hi'])
+
+ useEffect(() => { 
+  fetchResource();
+}, [1])
+
+called: values are different 
+
+5. Same object 
+ useEffect(() => { 
+  fetchResource();
+}, [{color: 'red'}])
+
+ useEffect(() => { 
+  fetchResource();
+}, [{color: 'red'}])
+
+called: remember identical objects aren't viewed as the same. Everytime we create an object in JS they are different objects in memory. 
+
+
+// <330 Quick GOTcha with use effect 
+useEffect can not be used inside an async function, it's better to declare the function on it's own then use useEffect. 
+
+We can solve this problem by declaring a function inside an arrow function inside a function.
+
+//332 ------- ACTUAL CODE REUSE --------------> 
+Main reason we use hooks is because it makes it easy to share logic between components. 
+
+
+
+
+
+
+
+
+
+
