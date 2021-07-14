@@ -40,21 +40,28 @@ function App() {
      ))
      console.log(tasks)
   } 
-  // toggleReminder 
-  //  once clicked set to the opposite of the previous state 
-  // set it with false or true 
-  // setState({ reminder : result})
-  // const toggle = (id) => { 
-  //   result = tasks.reminder
-  //   cliked = !clicked 
-    
-  //   setTask()
-  // }
+
+ const  onSubmit =  (newTask) =>  { 
+
+   const id = Math.floor(Math.random() * 10007) + 1 
+   newTask = {id, ...newTask}
+   setTask([...tasks, newTask])
+   console.log(tasks)
+
+  }
+
 
   return (
     <div className="container">
-      <Header title="passed in props" />
-      {tasks.length > 0 ?  <Tasks tasks={tasks} onDelete={onDelete} onToggle = {onToggle}/> : <p>No tasks!!!</p> }
+      <Header title="Task Reminder" onSubmit = {onSubmit} />
+      {tasks.length > 0 ?
+        <Tasks tasks={tasks} 
+        onDelete={onDelete} 
+        onToggle = {onToggle}
+        
+
+        /> 
+        : <p>No tasks!!!</p> }
      
     </div>
   );

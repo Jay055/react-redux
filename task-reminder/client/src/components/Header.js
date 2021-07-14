@@ -1,7 +1,7 @@
 // import PropTypes from 'prop-types';
 import Button from "./Button";
 import AddTask from "./AddTask";
-const Header = ({ title }) => {
+const Header = ({ title, onSubmit }) => {
   //  
   const onClick = () => { 
     console.log('clicked')
@@ -16,7 +16,7 @@ const Header = ({ title }) => {
         backgroundColor="light-blue"
         onClick = {onClick}
       ></Button>
-      <AddTask /> 
+      <AddTask onSubmit = {onSubmit}/> 
       {/* inline style */}
       {/* <h1 style= {{color: 'red', backgroundColor:'blue'}}></h1> */}
     </header>
